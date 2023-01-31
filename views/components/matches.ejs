@@ -1,0 +1,18 @@
+<div class="w3-card-4 w3- w3-theme-l5">
+    <div class="w3-container w3-blue">
+        <h3>Matches</h3>
+    </div>
+    <div class="w3-padding-16">
+        <% if ( matches==0) { %>
+            <div class="w3-container">
+                <h5>You currently have no matches</h5>
+            </div>
+            <% } else { for (let i=0; i < matches.length; i++) { %>
+                <div class="w3-container w3-card w3-margin w3-theme-l2">
+                    <h5>
+                        <%=matches[i]%>
+                    </h5>
+                </div>
+                <% } } %>
+    </div>
+</div>

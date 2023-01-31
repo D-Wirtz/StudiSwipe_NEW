@@ -1,0 +1,112 @@
+[
+    { 
+        "id": "dan123",
+        "name": "Daniel",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "de",
+        "dest": "gb",
+        "bio": "HI,\nich bin einfach ein cooler Typ"
+    },
+    {
+        "id": "ang123",
+        "name": "Angelica",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "de",
+        "dest": "gb",
+        "bio": "Ich habe mal gesungen"
+    },
+    {
+        "id": "cha123",
+        "name": "Charlotte",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "de",
+        "dest": "gb",
+        "bio": "Nicht Chalet"
+    },
+    {
+        "id": "chr123",
+        "name": "Christina",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "de",
+        "dest": "gb",
+        "bio": "Latein über allem"
+    },
+    {
+        "id": "dev123",
+        "name": "Devid",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "de",
+        "dest": "gb",
+        "bio": "#frontendIsTheBest"
+    },
+    {
+        "id": "isa123",
+        "name": "Isabell",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "gb",
+        "dest": "de",
+        "bio": "Weis nicht was ich schreiben soll"
+    },
+    {
+        "id": "mig123",
+        "name": "Miguel",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "gb",
+        "dest": "de",
+        "bio": "Demnächst regiere ich Kuba"
+    },
+    {
+        "id": "nik123",
+        "name": "Niklas",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "gb",
+        "dest": "de",
+        "bio": "Einfach nur Niklas"
+    },
+    {
+        "id": "sop123",
+        "name": "Sophie",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "gb",
+        "dest": "de",
+        "bio": "Nicht aus dem Hause Stark"
+    },
+    {
+        "id": "reg123",
+        "name": "Regina",
+        "password": "test",
+        "liked": [],
+        "passed": [],
+        "matches": [],
+        "located": "gb",
+        "dest": "de",
+        "bio": "Die Schule ist mein Reich"
+    }
+]
