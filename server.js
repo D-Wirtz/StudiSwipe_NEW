@@ -5,66 +5,76 @@ const server = http.createServer(app)
 const { Server } = require('socket.io')
 const io = new Server(server)
 
-const session = require('express-session')
 const bp = require('body-parser')
+const { randomUUID } = require('crypto')
+const cookieParser = require('cookie-parser')
 
 const DB = require("./libs/db")
 
 const accounts = new DB("./data/accounts.json")
 
 app.set('view engine', 'ejs')
-app.use(session({
-    secret: 'top-secret',
-    resave: false,
-    saveUninitialized: false
-}))
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
+app.use(cookieParser())
+
+let sessions = {}
+
+setInterval(() => {
+    for (let x in sessions) {
+        // console.log(sessions[x].expiringTime)
+        if (sessions[x].expiringTime < Date.now()) {
+            delete sessions[x]
+        }
+    }
+}, 5 * 1000);
 
 app.get("/", (req, res) => {
-    res.redirect("/login",)
+    let token = req.cookies["session_token"]
+    if (!token || !sessions.hasOwnProperty(token)) {
+        res.render("login")
+    } else {
+        res.render("home")
+    }
 })
 
-app.get("/login", (req, res) => {
-    res.render("login")
+app.get("*", (req, res) => {
+    res.redirect("/")
 })
 
 app.post("/login", (req, res) => {
     let accs = accounts.get(req.body)
-    req.session.loggedin = false
     if (accs.length === 1) {
-        {
-            req.session.loggedin = true
-            req.session.username = accs[0].name
-            req.session.bio = accs[0].bio
-            req.session.matches = accs[0].matches
+        let session = {
+            id: accs[0].id,
+            expiringTime: Date.now() + 15 * 60 * 1000
         }
+        let token = randomUUID()
+        sessions[token] = session
+        res.cookie("session_token", token,)
         res.redirect("/home")
-    } else {
-    }
-})
-
-app.all("/logout", (req, res) => {
-    req.session = null
-    res.redirect("/login")
-})
-
-app.get("/home", (req, res) => {
-    if (req.session.loggedin) {
-        res.render("home", { username: req.session.username, bio: req.session.bio, matches: req.session.matches })
     } else {
         res.redirect("/login")
     }
-})
-
-app.get('*', function (req, res) {
-    res.redirect("/")
 })
 
 io.on("connection", (socket) => {
     log("Socket connect")
     socket.on("disconnect", () => {
         log("Socket disconnect")
+    })
+
+    socket.on("getAccount", (data, res) => {
+        log("getAccount")
+        if (sessions.hasOwnProperty(data)) {
+            acc = accounts.get({
+                id: sessions[data].id
+            })[0]
+            res({
+                acc_name: acc.name,
+                acc_bio: acc.bio
+            })
+        }
     })
 })
 

@@ -8,19 +8,32 @@
     <title>StudiSwipe</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="client-code.js"></script> -->
+    <script>
+        var socket = io()
+        let account
+        let token = document.cookie.split("; ").find((row) => row.startsWith("session_token="))?.split("=")[1]
+
+        socket.emit("getAccount", token, (res) => {
+            for (let x in res) {
+                document.getElementById(x).innerText = res[x]
+            }
+        })
+    </script>
 </head>
 
 <body>
     <%- include('components/header') %>
         <div class="w3-row">
             <div class="w3-third w3-padding">
-                <%- include('components/account') %>
+                <%-include('components/account')%>
             </div>
             <div class="w3-third w3-padding">
-                <%- include('components/swipe') %>
+                include('components/swipe')
             </div>
             <div class="w3-third w3-padding">
-                <%- include('components/matches') %>
+                include('components/matches')
             </div>
 
         </div>
