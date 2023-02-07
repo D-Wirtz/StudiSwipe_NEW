@@ -5,7 +5,7 @@
         "password": "test",
         "liked": [],
         "passed": [],
-        "matches": [],
+        "matches": ["Hitler", "test"],
         "located": "de",
         "dest": "gb",
         "bio": "HI,\nich bin einfach ein cooler Typ"
