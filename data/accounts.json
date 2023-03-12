@@ -1,14 +1,34 @@
 [
-    { 
+    {
         "id": "dan123",
         "name": "Daniel",
         "password": "test",
         "liked": [],
         "passed": [],
-        "matches": ["Hitler", "test"],
+        "matches": ["ang123"],
         "located": "de",
         "dest": "gb",
-        "bio": "HI,\nich bin einfach ein cooler Typ"
+        "bio": "HI,\nich bin einfach ein cooler Typ",
+        "msgs": {
+            "_sw": [
+                {
+                    "type" : "text",
+                    "text": "Willkommen bei StudiSwipe"
+                }
+            ],
+            "ang123": [
+                {
+                    "id": "ang123",
+                    "type" : "text",
+                    "text": "Hallo Daniel"
+                },
+                {
+                    "id": "dan123",
+                    "type" : "text",
+                    "text": "Hi"
+                }
+            ]
+        }
     },
     {
         "id": "ang123",
@@ -19,7 +39,8 @@
         "matches": [],
         "located": "de",
         "dest": "gb",
-        "bio": "Ich habe mal gesungen"
+        "bio": "Ich habe mal gesungen",
+        "msgs": {}
     },
     {
         "id": "cha123",
@@ -30,7 +51,8 @@
         "matches": [],
         "located": "de",
         "dest": "gb",
-        "bio": "Nicht Chalet"
+        "bio": "Nicht Chalet",
+        "msgs": {}
     },
     {
         "id": "chr123",
@@ -41,7 +63,8 @@
         "matches": [],
         "located": "de",
         "dest": "gb",
-        "bio": "Latein über allem"
+        "bio": "Latein über allem",
+        "msgs": {}
     },
     {
         "id": "dev123",
@@ -52,7 +75,8 @@
         "matches": [],
         "located": "de",
         "dest": "gb",
-        "bio": "#frontendIsTheBest"
+        "bio": "#frontendIsTheBest",
+        "msgs": {}
     },
     {
         "id": "isa123",
@@ -63,7 +87,8 @@
         "matches": [],
         "located": "gb",
         "dest": "de",
-        "bio": "Weis nicht was ich schreiben soll"
+        "bio": "Weis nicht was ich schreiben soll",
+        "msgs": {}
     },
     {
         "id": "mig123",
@@ -74,7 +99,8 @@
         "matches": [],
         "located": "gb",
         "dest": "de",
-        "bio": "Demnächst regiere ich Kuba"
+        "bio": "Demnächst regiere ich Kuba",
+        "msgs": {}
     },
     {
         "id": "nik123",
@@ -85,7 +111,8 @@
         "matches": [],
         "located": "gb",
         "dest": "de",
-        "bio": "Einfach nur Niklas"
+        "bio": "Einfach nur Niklas",
+        "msgs": {}
     },
     {
         "id": "sop123",
@@ -96,7 +123,8 @@
         "matches": [],
         "located": "gb",
         "dest": "de",
-        "bio": "Nicht aus dem Hause Stark"
+        "bio": "Nicht aus dem Hause Stark",
+        "msgs": {}
     },
     {
         "id": "reg123",
@@ -107,6 +135,7 @@
         "matches": [],
         "located": "gb",
         "dest": "de",
-        "bio": "Die Schule ist mein Reich"
+        "bio": "Die Schule ist mein Reich",
+        "msgs": {}
     }
 ]

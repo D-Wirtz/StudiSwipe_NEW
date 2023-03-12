@@ -9,69 +9,26 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
     <script src="/socket.io/socket.io.js"></script>
-    <!-- <script src="client-code.js"></script> -->
+    <script src="client-code.js"></script>
     <script>
-        var socket = io()
-        let account
-        let token = document.cookie.split("; ").find((row) => row.startsWith("session_token="))?.split("=")[1]
-
-        socket.emit("getAccount", { token: token }, (res) => {
-            for (let x in res) {
-                document.getElementById(x).innerText = res[x]
-            }
-        })
-
-        socket.emit("getMatches", { token: token }, (res) => {
-            if (false) {
-
-            } else {
-                let html = ""
-                res.acc_matches.forEach(e => {
-                    let string = "<div class='w3-container w3-card w3-margin w3-theme-l2'><h5 title='" + e + "'>" + e + "</h5></div>"
-                    html = html.concat(string)
-                })
-                document.getElementById("matches").innerHTML = html
-            }
-        })
-
-        socket.on("newCard", (data) => {
-            if (data == null) {
-                alert("There are no more persons")
-                res(null)
-            } else {
-                document.getElementById("swipe_name").innerText = data.name
-                document.getElementById("swipe_bio").innerText = data.bio
-            }
-
-            document.getElementById("swipe_pass").onclick = () => {
-                socket.emit("voteCard", { token: token, action: "pass" })
-                socket.emit("getCard", { token: token })
-            }
-
-            document.getElementById("swipe_like").onclick = () => {
-                socket.emit("voteCard", { token: token, action: "like" })
-                socket.emit("getCard", { token: token })
-            }
-        })
-
-        socket.emit("getCard", { token: token })
+        
     </script>
 </head>
 
 <body>
     <%- include('components/header') %>
-        <div class="w3-row">
-            <div class="w3-third w3-padding">
-                <%-include('components/account')%>
-            </div>
-            <div class="w3-third w3-padding">
-                <%-include('components/swipe')%>
-            </div>
-            <div class="w3-third w3-padding">
-                <%-include('components/matches')%>
-            </div>
-
+    <div class="w3-row">
+        <div class="w3-third w3-padding">
+            <%-include('components/account')%>
         </div>
+        <div class="w3-third w3-padding">
+            <%-include('components/swipe')%>
+        </div>
+        <div class="w3-third w3-padding">
+            <%-include('components/matches')%>
+        </div>
+    </div>
+    <%-include('components/chat')%>
 
 </body>
 

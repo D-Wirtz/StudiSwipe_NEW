@@ -1,0 +1,16 @@
+<div id="chat_modal" class="w3-modal w3-padding-48">
+    <div class="w3-modal-content w3-animate-bottom w3-card-4" style="display: flex; flex-flow: column; height: 100%">
+        <div class="w3-container w3-theme w3-padding">
+            <h2>
+                <span id="chat_title">Title</span>
+                <span onclick="closeChat()" class="w3-right"
+                    style="width: 3ex; text-align: center; cursor: pointer;">&#x2716;</span>
+            </h2>
+        </div>
+        <div class="w3-container" id="chat_msgs" style="flex: auto; overflow-y: scroll;">
+        </div>
+        <footer class="w3-container w3-teal w3-padding">
+            <input type="text" id="chat_input" class="w3-block" onkeypress="if (event.key == 'Enter') {sendMessage(this.value)}">
+        </footer>
+    </div>
+</div>

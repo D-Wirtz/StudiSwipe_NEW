@@ -18,6 +18,8 @@ app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
 app.use(cookieParser())
 
+app.use(express.static("client"))
+
 let sessions = {}
 
 setInterval(() => {
@@ -27,6 +29,10 @@ setInterval(() => {
         }
     }
 }, 5 * 1000);
+
+app.get("/db", (req, res) => {
+    res.send(accounts.db)
+})
 
 app.get("/", (req, res) => {
     let token = req.cookies["session_token"]
@@ -89,8 +95,56 @@ io.on("connection", (socket) => {
             acc = accounts.get({
                 id: sessions[data.token].id
             })[0]
+            let matches = []
+            acc.matches.forEach(m => {
+                let match = accounts.get({ id: m })[0]
+                matches.push({ id: match.id, name: match.name })
+            });
+
             res({
-                acc_matches: acc.matches
+                acc_matches: matches
+            })
+        }
+    })
+
+    socket.on("getMessages", (data, res) => {
+        if (sessions.hasOwnProperty(data.token)) {
+            acc = accounts.get({
+                id: sessions[data.token].id
+            })[0]
+            if (!acc.msgs.hasOwnProperty(data.id)) {
+                acc.msgs[data.id] = []
+            }
+            let msgs = acc.msgs[data.id]
+            let sender = {
+                id: data.id,
+                name: accounts.get({ id: data.id })[0].name
+            }
+            res({ msgs: msgs, sender: sender })
+        }
+    })
+
+    socket.on("sendMessage", (data) => {
+        if (sessions.hasOwnProperty(data.token)) {
+            console.log("From: " + sessions[data.token].id)
+            console.log("To:   " + data.id)
+            console.log("txt:  " + data.txt)
+
+            //sender
+            accounts.db[accounts.db.findIndex((a) => a.id == sessions[data.token].id)].msgs[data.id].push({
+                id: sessions[data.token].id,
+                type: "text",
+                text: data.txt
+            })
+
+            //partner
+            if (accounts.db[accounts.db.findIndex((a) => a.id == data.id)].msgs[sessions[data.token].id] == null) {
+                accounts.db[accounts.db.findIndex((a) => a.id == data.id)].msgs[sessions[data.token].id] = []
+            }
+            accounts.db[accounts.db.findIndex((a) => a.id == data.id)].msgs[sessions[data.token].id].push({
+                id: sessions[data.token].id,
+                type: "text",
+                text: data.txt
             })
         }
     })
@@ -141,7 +195,7 @@ io.on("connection", (socket) => {
 
     socket.on("voteCard", (data) => {
         if (currentProfile == null) { return null }
-        
+
 
         if (sessions.hasOwnProperty(data.token)) {
             acc = accounts.get({
