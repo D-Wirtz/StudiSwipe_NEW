@@ -1,14 +1,14 @@
 [
     {
         "id": "dan123",
-        "name": "Daniel",
+        "name": "[DEV] Daniel",
         "password": "test",
         "liked": [],
         "passed": [],
         "matches": ["ang123"],
         "located": "de",
         "dest": "gb",
-        "bio": "HI,\nich bin einfach ein cooler Typ",
+        "bio": "HI,\nich bin einfach ein kek",
         "msgs": {
             "_sw": [
                 {
@@ -32,7 +32,7 @@
     },
     {
         "id": "ang123",
-        "name": "Angelica",
+        "name": "[Staff] Angelica",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -44,7 +44,7 @@
     },
     {
         "id": "cha123",
-        "name": "Charlotte",
+        "name": "[Staff] Charlotte",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -56,7 +56,7 @@
     },
     {
         "id": "chr123",
-        "name": "Christina",
+        "name": "[Staff] Christina",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -68,8 +68,8 @@
     },
     {
         "id": "dev123",
-        "name": "Devid",
-        "password": "test",
+        "name": "[DEV] Devid",
+        "password": "root",
         "liked": [],
         "passed": [],
         "matches": [],
@@ -80,7 +80,7 @@
     },
     {
         "id": "isa123",
-        "name": "Isabell",
+        "name": "[Staff] Isabell",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -92,7 +92,7 @@
     },
     {
         "id": "mig123",
-        "name": "Miguel",
+        "name": "[Staff] Miguel",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -104,7 +104,7 @@
     },
     {
         "id": "nik123",
-        "name": "Niklas",
+        "name": "[Staff] Niklas",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -116,7 +116,7 @@
     },
     {
         "id": "sop123",
-        "name": "Sophie",
+        "name": "[Staff] Sophie",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -128,7 +128,7 @@
     },
     {
         "id": "reg123",
-        "name": "Regina",
+        "name": "[Staff] Regina",
         "password": "test",
         "liked": [],
         "passed": [],
