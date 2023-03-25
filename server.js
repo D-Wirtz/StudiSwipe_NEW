@@ -28,7 +28,7 @@ setInterval(() => {
             delete sessions[x]
         }
     }
-}, 5 * 1000);
+}, 99 * 1000);
 
 app.get("/db", (req, res) => {
     res.send(accounts.db)
