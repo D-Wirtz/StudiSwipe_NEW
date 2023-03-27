@@ -28,7 +28,7 @@ setInterval(() => {
             delete sessions[x]
         }
     }
-}, 99 * 1000);
+}, 5 * 1000);
 
 app.get("/db", (req, res) => {
     res.send(accounts.db)
@@ -56,7 +56,7 @@ app.post("/login", (req, res) => {
     if (accs.length === 1) {
         let session = {
             id: accs[0].id,
-            expiringTime: Date.now() + 15 * 60 * 1000
+            expiringTime: Date.now() + 30 * 60 * 1000
         }
         let token = randomUUID()
         sessions[token] = session
