@@ -69,7 +69,7 @@ app.post("/login", (req, res) => {
     if (accs.length === 1) {
         let session = {
             id: accs[0].id,
-            expiringTime: Date.now() + 15 * 60 * 1000
+            expiringTime: Date.now() + 30 * 60 * 1000
         }
         let token = randomUUID()
         sessions[token] = session
