@@ -1,22 +1,25 @@
-<div class="w3-card-4 w3-theme-l5">
-    <div class="w3-container w3-blue">
+<div class="w3-card-4 w3-theme-l5" style="height: 100%; display: flex; flex-flow: column;">
+    <div class=" w3-container w3-blue" style="flex: 0 1;">
         <h3>Your Account</h3>
     </div>
-    <table class="w3-container w3-table">
-        <tr>
-            <td>Name:</td>
-            <td id="acc_name">
-                
-            </td>
-        </tr>
-        <tr>
-            <td>Bio:</td>
-            <td id="acc_bio">
-                
-            </td>
-        </tr>
-    </table>
-    <form action="/logout" method="post">
+    <div style="flex: 1 1; max-height: inherit; overflow-y: scroll;">
+        <table class="w3-container w3-table">
+            <tr>
+                <td>Name:</td>
+                <td id="acc_name">
+
+                </td>
+            </tr>
+            <tr>
+                <td>Bio:</td>
+                <td id="acc_bio">
+
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <form action="/logout" method="post" style="flex: 0 1;">
         <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" type="submit">Logout</button>
     </form>
 </div>

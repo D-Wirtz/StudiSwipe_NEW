@@ -5,7 +5,7 @@
         "password": "test",
         "liked": [],
         "passed": [],
-        "matches": ["ang123"],
+        "matches": ["ang123", "dev123", "reg123", "cha123", "chr123", "isa123"],
         "located": "de",
         "dest": "gb",
         "bio": "HI,\nich bin einfach ein cooler Typ",

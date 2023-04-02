@@ -9,6 +9,7 @@ const bp = require('body-parser')
 const { randomUUID } = require('crypto')
 const cookieParser = require('cookie-parser')
 
+// import my own db class from libs
 const DB = require("./libs/db")
 
 const accounts = new DB("./data/accounts.json")
@@ -18,33 +19,45 @@ app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
 app.use(cookieParser())
 
+// for every get, use files in client-folder
 app.use(express.static("client"))
 
+// empty list for sessions
 let sessions = {}
 
+// go through sessions an remove all outdated ones
 setInterval(() => {
     for (let x in sessions) {
         if (sessions[x].expiringTime < Date.now()) {
             delete sessions[x]
         }
     }
-}, 5 * 1000);
+}, 5 * 1000); // interval speed (5 sec)
 
-app.get("/db", (req, res) => {
-    res.send(accounts.db)
+app.get("/admin", (req, res) => {
+    res.render("admin")
 })
 
 app.get("/", (req, res) => {
+    res.render("welcome")
+})
+
+app.get("/login", (req, res) => {
     let token = req.cookies["session_token"]
     if (!token || !sessions.hasOwnProperty(token)) {
         res.render("login")
     } else {
-        res.render("home")
+        res.redirect("/home")
     }
 })
 
-app.get("/debug", (req, res) => {
-    res.send(accounts.db)
+app.get("/home", (req, res) => {
+    let token = req.cookies["session_token"]
+    if (!token || !sessions.hasOwnProperty(token)) {
+        res.redirect("/")
+    } else {
+        res.render("home")
+    }
 })
 
 app.get("*", (req, res) => {
@@ -60,7 +73,7 @@ app.post("/login", (req, res) => {
         }
         let token = randomUUID()
         sessions[token] = session
-        res.cookie("session_token", token,)
+        res.cookie("session_token", token)
         res.redirect("/home")
     } else {
         res.redirect("/login")
@@ -69,7 +82,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
     delete sessions[req.cookies["session_token"]]
-    res.redirect("/home")
+    res.redirect("/login")
 })
 
 io.on("connection", (socket) => {

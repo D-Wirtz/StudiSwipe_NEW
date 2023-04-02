@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%; max-height: 100%;">
 
 <head>
     <meta charset="UTF-8">
@@ -11,25 +11,44 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="client-code.js"></script>
     <script>
-        
     </script>
 </head>
 
-<body>
+<body style="display: flex; flex-flow: column; height: 100%;" onload="tab('chat')">
     <%- include('components/header') %>
-    <div class="w3-row">
-        <div class="w3-third w3-padding">
+    <div style="display: flex; flex-flow: row; flex: 0 1;">
+        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('acc')" id="btn_acc">Account</button>
+        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('swipe')" id="btn_swipe">Swipe</button>
+        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('chat')" id="btn_chat">Chat</button>
+    </div>
+    <div style="height: inherit; overflow-y: scroll;">
+        <div class="w3-padding-large w3-hide" id="tab_acc" style="height: 100%;">
             <%-include('components/account')%>
         </div>
-        <div class="w3-third w3-padding">
+        <div class="w3-padding-large w3-hide" id="tab_swipe" style="height: 100%;">
             <%-include('components/swipe')%>
         </div>
-        <div class="w3-third w3-padding">
+        <div class="w3-padding-large w3-hide" id="tab_chat" style="height: 100%;">
             <%-include('components/matches')%>
         </div>
     </div>
     <%-include('components/chat')%>
-
 </body>
 
+<script>
+
+    function tab(t) {
+        document.getElementById("btn_acc").classList.remove("w3-theme")
+        document.getElementById("tab_acc").classList.add("w3-hide")
+
+        document.getElementById("btn_swipe").classList.remove("w3-theme")
+        document.getElementById("tab_swipe").classList.add("w3-hide")
+
+        document.getElementById("btn_chat").classList.remove("w3-theme")
+        document.getElementById("tab_chat").classList.add("w3-hide")
+
+        document.getElementById("btn_" + t).classList.add("w3-theme")
+        document.getElementById("tab_" + t).classList.remove("w3-hide")
+    }
+</script>
 </html>
