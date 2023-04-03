@@ -88,9 +88,6 @@ app.post("/logout", (req, res) => {
 io.on("connection", (socket) => {
     let currentProfile = null
 
-    socket.on("disconnect", () => {
-    })
-
     socket.on("getAccount", (data, res) => {
         if (sessions.hasOwnProperty(data.token)) {
             acc = accounts.get({
@@ -100,6 +97,14 @@ io.on("connection", (socket) => {
                 acc_name: acc.name,
                 acc_bio: acc.bio
             })
+        }
+    })
+
+    socket.on("editAccount", (data) => {
+        if (sessions.hasOwnProperty(data.token)) {
+            let id = sessions[data.token].id
+            let index = accounts.index(accounts.get({id : id})[0])
+            accounts.db[index][data.param] = data.value
         }
     })
 

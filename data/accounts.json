@@ -1,38 +1,19 @@
 [
     {
         "id": "dan123",
-        "name": "[DEV] Daniel",
+        "name": " Daniel",
         "password": "test",
         "liked": [],
         "passed": [],
-        "matches": ["ang123", "dev123", "reg123", "cha123", "chr123", "isa123"],
+        "matches": [],
         "located": "de",
         "dest": "gb",
-        "bio": "HI,\nich bin einfach ein kek",
-        "msgs": {
-            "_sw": [
-                {
-                    "type" : "text",
-                    "text": "Willkommen bei StudiSwipe"
-                }
-            ],
-            "ang123": [
-                {
-                    "id": "ang123",
-                    "type" : "text",
-                    "text": "Hallo Daniel"
-                },
-                {
-                    "id": "dan123",
-                    "type" : "text",
-                    "text": "Hi"
-                }
-            ]
-        }
+        "bio": "Hi,\nich bin einfach ein kek (p.s. Devid war hier)",
+        "msgs": {}
     },
     {
         "id": "ang123",
-        "name": "[Staff] Angelica",
+        "name": " Angelica",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -44,7 +25,7 @@
     },
     {
         "id": "cha123",
-        "name": "[Staff] Charlotte",
+        "name": " Charlotte",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -56,7 +37,7 @@
     },
     {
         "id": "chr123",
-        "name": "[Staff] Christina",
+        "name": " Christina",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -68,7 +49,7 @@
     },
     {
         "id": "dev123",
-        "name": "[DEV] Devid",
+        "name": " Devid",
         "password": "root",
         "liked": [],
         "passed": [],
@@ -80,7 +61,7 @@
     },
     {
         "id": "isa123",
-        "name": "[Staff] Isabell",
+        "name": " Isabell",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -92,7 +73,7 @@
     },
     {
         "id": "mig123",
-        "name": "[Staff] Miguel",
+        "name": " Miguel",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -104,7 +85,7 @@
     },
     {
         "id": "nik123",
-        "name": "[Staff] Niklas",
+        "name": " Niklas",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -116,7 +97,7 @@
     },
     {
         "id": "sop123",
-        "name": "[Staff] Sophie",
+        "name": " Sophie",
         "password": "test",
         "liked": [],
         "passed": [],
@@ -128,14 +109,14 @@
     },
     {
         "id": "reg123",
-        "name": "[Staff] Regina",
+        "name": " Regina",
         "password": "test",
         "liked": [],
         "passed": [],
         "matches": [],
         "located": "gb",
         "dest": "de",
-        "bio": "Die Schule ist mein Reich",
+        "bio": "Die Jungs und Mädels von StudiSwipe sind einfach die Besten!, Die Jungs und Mädels von StudiSwipe sind einfach die Besten!, Die Jungs und Mädels von StudiSwipe sind einfach die Besten!, Die Jungs und Mädels von StudiSwipe sind einfach die Besten!, Die Jungs und Mädels von StudiSwipe sind einfach die Besten!,",
         "msgs": {}
     }
 ]

@@ -4,24 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>StudiSwipe</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
     <script src="/socket.io/socket.io.js"></script>
     <script src="client-code.js"></script>
-    <script>
-    </script>
 </head>
 
-<body style="display: flex; flex-flow: column; height: 100%;" onload="tab('chat')">
+<body style="display: flex; flex-flow: column; height: 100%; user-select: none;" onload="tab('acc')">
     <%- include('components/header') %>
     <div style="display: flex; flex-flow: row; flex: 0 1;">
         <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('acc')" id="btn_acc">Account</button>
         <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('swipe')" id="btn_swipe">Swipe</button>
         <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('chat')" id="btn_chat">Chat</button>
     </div>
-    <div style="height: inherit; overflow-y: scroll;">
+    <div class="w3-padding" style="height: inherit; overflow-y: scroll;">
         <div class="w3-padding-large w3-hide" id="tab_acc" style="height: 100%;">
             <%-include('components/account')%>
         </div>

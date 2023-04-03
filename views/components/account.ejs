@@ -3,23 +3,31 @@
         <h3>Your Account</h3>
     </div>
     <div style="flex: 1 1; max-height: inherit; overflow-y: scroll;">
-        <table class="w3-container w3-table">
-            <tr>
-                <td>Name:</td>
-                <td id="acc_name">
-
-                </td>
-            </tr>
-            <tr>
-                <td>Bio:</td>
-                <td id="acc_bio">
-
-                </td>
-            </tr>
-        </table>
+        <h2 class="w3-center" id="acc_name"></h2>
+        <div class="w3-padding">
+            <span class="w3-padding">Bio:</span>
+            <div class="w3-justify w3-padding w3-border" id="acc_bio" onclick="openEdit('bio')"></div>
+        </div>
     </div>
 
-    <form action="/logout" method="post" style="flex: 0 1;">
-        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" type="submit">Logout</button>
-    </form>
+    <div style="flex: 0 1; display: flex; flex-flow: row;">
+        <form action="/logout" method="post" style="flex: 1;">
+            <button class="w3-button w3-theme-l3 w3-hover-theme" style="width: 100%;" type="submit">Logout</button>
+        </form>
+    </div>
+</div>
+
+<div id="edit_modal" class="w3-modal w3-padding-48">
+    <div class="w3-modal-content w3-animate-bottom w3-card-4" style="display: flex; flex-flow: column; height: 100%">
+        <div class="w3-container w3-theme w3-padding">
+            <h2>
+                <span id="edit_title">Title</span>
+                <span onclick="closeEdit()" class="w3-right"
+                    style="width: 3ex; text-align: center; cursor: pointer;">&#x2716;</span>
+            </h2>
+        </div>
+        <div class="w3-padding" style="height: 100%;">
+            <textarea id="edit_txt" style="height: 100%; width: 100%; resize: none;"></textarea>
+        </div>
+    </div>
 </div>

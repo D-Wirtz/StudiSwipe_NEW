@@ -8,8 +8,10 @@ window.onclick = function (event) {
     }
 }
 
+let acc = {}
 function getAccount() {
     socket.emit("getAccount", { token: token }, (res) => {
+        acc = res
         for (let x in res) {
             document.getElementById(x).innerText = res[x]
         }
@@ -71,9 +73,29 @@ function openChat(id) {
 }
 
 function closeChat() {
-    currentChat = null
     document.getElementById("chat_msgs").innerHTML = ""
     document.getElementById('chat_modal').style.display = "none"
+    currentChat = null
+}
+
+let currentEdit = null
+function openEdit(p) {
+    currentEdit = p
+    document.getElementById("edit_title").innerHTML = p.charAt(0).toUpperCase() + p.slice(1)
+    document.getElementById("edit_txt").innerHTML = acc.acc_bio
+    document.getElementById("edit_modal").style.display = "block"
+}
+
+function closeEdit() {
+    socket.emit("editAccount", {
+        token: token,
+        param: currentEdit,
+        value: document.getElementById("edit_txt").value
+    })
+    getAccount()
+    document.getElementById('edit_modal').style.display = "none"
+    acc.acc_bio = document.getElementById("edit_txt").innerHTML
+    currentEdit = null
 }
 
 function newMessage(msg, sender) {
