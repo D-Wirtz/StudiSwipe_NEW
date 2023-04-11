@@ -14,23 +14,26 @@
 
 <body style="display: flex; flex-flow: column; height: 100%; user-select: none;" onload="tab('acc')">
     <%- include('components/header') %>
-    <div style="display: flex; flex-flow: row; flex: 0 1;">
-        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('acc')" id="btn_acc">Account</button>
-        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('swipe')" id="btn_swipe">Swipe</button>
-        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('chat')" id="btn_chat">Chat</button>
-    </div>
-    <div class="w3-padding" style="height: inherit; overflow-y: scroll;">
-        <div class="w3-padding-large w3-hide" id="tab_acc" style="height: 100%;">
-            <%-include('components/account')%>
+        <div style="display: flex; flex-flow: row; flex: 0 1;">
+            <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('acc')"
+                id="btn_acc">Account</button>
+            <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('swipe')"
+                id="btn_swipe">Swipe</button>
+            <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('chat')"
+                id="btn_chat">Chat</button>
         </div>
-        <div class="w3-padding-large w3-hide" id="tab_swipe" style="height: 100%;">
-            <%-include('components/swipe')%>
+        <div class="w3-padding" style="height: inherit; overflow-y: scroll;">
+            <div class="w3-padding-large w3-hide" id="tab_acc" style="height: 100%;">
+                <%- include('components/account') %>
+            </div>
+            <div class="w3-padding-large w3-hide" id="tab_swipe" style="height: 100%;">
+                <%- include('components/swipe') %>
+            </div>
+            <div class="w3-padding-large w3-hide" id="tab_chat" style="height: 100%;">
+                <%- include('components/matches') %>
+            </div>
         </div>
-        <div class="w3-padding-large w3-hide" id="tab_chat" style="height: 100%;">
-            <%-include('components/matches')%>
-        </div>
-    </div>
-    <%-include('components/chat')%>
+        <%- include('components/chat') %>
 </body>
 
 <script>
@@ -49,4 +52,5 @@
         document.getElementById("tab_" + t).classList.remove("w3-hide")
     }
 </script>
+
 </html>

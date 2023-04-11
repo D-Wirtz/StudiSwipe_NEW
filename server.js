@@ -35,7 +35,7 @@ setInterval(() => {
 }, 5 * 1000); // interval speed (5 sec)
 
 app.get("/admin", (req, res) => {
-    res.render("admin")
+    res.send(accounts.get({ id: "dan123" }))
 })
 
 app.get("/", (req, res) => {
@@ -64,12 +64,13 @@ app.get("*", (req, res) => {
     res.redirect("/")
 })
 
+const newSessionDuration = 60 // in min
 app.post("/login", (req, res) => {
     let accs = accounts.get(req.body)
     if (accs.length === 1) {
         let session = {
             id: accs[0].id,
-            expiringTime: Date.now() + 30 * 60 * 1000
+            expiringTime: Date.now() + newSessionDuration * 60 * 1000
         }
         let token = randomUUID()
         sessions[token] = session
@@ -88,6 +89,7 @@ app.post("/logout", (req, res) => {
 io.on("connection", (socket) => {
     let currentProfile = null
 
+    // account
     socket.on("getAccount", (data, res) => {
         if (sessions.hasOwnProperty(data.token)) {
             acc = accounts.get({
@@ -100,14 +102,15 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on("editAccount", (data) => {
+    socket.on("editAccount", (data, res) => {
         if (sessions.hasOwnProperty(data.token)) {
             let id = sessions[data.token].id
-            let index = accounts.index(accounts.get({id : id})[0])
+            let index = accounts.index(accounts.get({ id: id })[0])
             accounts.db[index][data.param] = data.value
         }
     })
 
+    // matches
     socket.on("getMatches", (data, res) => {
         if (sessions.hasOwnProperty(data.token)) {
             acc = accounts.get({
@@ -125,6 +128,7 @@ io.on("connection", (socket) => {
         }
     })
 
+    // matches
     socket.on("getMessages", (data, res) => {
         if (sessions.hasOwnProperty(data.token)) {
             acc = accounts.get({
@@ -143,30 +147,42 @@ io.on("connection", (socket) => {
     })
 
     socket.on("sendMessage", (data) => {
+        console.log(data)
         if (sessions.hasOwnProperty(data.token)) {
-            console.log("From: " + sessions[data.token].id)
-            console.log("To:   " + data.id)
-            console.log("txt:  " + data.txt)
+            let msg = null
+            switch (data.cnt.type) {
+                case "text":
+                    msg = {
+                        type: "text",
+                        id: sessions[data.token].id,
+                        text: data.cnt.txt
+                    }
+                    break;
 
-            //sender
-            accounts.db[accounts.db.findIndex((a) => a.id == sessions[data.token].id)].msgs[data.id].push({
-                id: sessions[data.token].id,
-                type: "text",
-                text: data.txt
-            })
+                case "test":
+                    msg = {
+                        type: "info",
+                        text: "Test,..."
+                    }
+                    break;
 
-            //partner
-            if (accounts.db[accounts.db.findIndex((a) => a.id == data.id)].msgs[sessions[data.token].id] == null) {
-                accounts.db[accounts.db.findIndex((a) => a.id == data.id)].msgs[sessions[data.token].id] = []
+                default:
+                    break;
             }
-            accounts.db[accounts.db.findIndex((a) => a.id == data.id)].msgs[sessions[data.token].id].push({
-                id: sessions[data.token].id,
-                type: "text",
-                text: data.txt
-            })
+            if (!msg) {
+                //sender
+                accounts.db[accounts.db.findIndex((a) => a.id == sessions[data.token].id)].msgs[data.cnt.to].push(msg)
+
+                //partner
+                if (accounts.db[accounts.db.findIndex((a) => a.id == data.cnt.to)].msgs[sessions[data.token].id] == null) {
+                    accounts.db[accounts.db.findIndex((a) => a.id == data.cnt.to)].msgs[sessions[data.token].id] = []
+                }
+                accounts.db[accounts.db.findIndex((a) => a.id == data.cnt.to)].msgs[sessions[data.token].id].push(msg)
+            }
         }
     })
 
+    // card
     socket.on("getCard", (data) => {
         if (sessions.hasOwnProperty(data.token)) {
             acc = accounts.get({
@@ -176,7 +192,7 @@ io.on("connection", (socket) => {
             let a = getCard(acc)
             currentProfile = a
             if (currentProfile == null) {
-                socket.emit("newProfile", null)
+                socket.emit("newCard", null)
                 return
             } else {
                 let data = {
@@ -191,13 +207,12 @@ io.on("connection", (socket) => {
     function getCard(acc) {
         if (acc == null) { return null }
 
-        filter = {
+        let filter = {
             "located": acc.dest,
             "dest": acc.located
         }
 
         let accs = accounts.get(filter)
-
         let profile = null
         accs.forEach(a => {
             if (
@@ -207,7 +222,6 @@ io.on("connection", (socket) => {
                 return
             }
         });
-
         return profile
     }
 
@@ -244,11 +258,5 @@ io.on("connection", (socket) => {
 
     })
 })
-
-function log(txt) {
-    let date = new Date()
-    let ts = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-    console.log(ts + " - " + txt)
-}
 
 server.listen(80)

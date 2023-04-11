@@ -22,7 +22,7 @@ function getMatches() {
     socket.emit("getMatches", { token: token }, (res) => {
         let html = ""
         if (res.acc_matches.length == 0) {
-
+            html = html.concat('<div class="w3-padding"><span class="w3-left">Sorry, but it looks like you don\'t have any matches at the moment</span></div>')
         } else {
             res.acc_matches.forEach(e => {
                 html = html.concat('<div class="w3-padding"><button class="w3-button w3-block w3-theme-l2 w3-hover-theme" onclick="openChat(\'' + e.id + '\')"><span class="w3-left">' + e.name + '</span></button></div>')
@@ -33,7 +33,9 @@ function getMatches() {
 }
 
 function getMessages(id) {
+    // id -> chatPartner
     socket.emit("getMessages", { token: token, id: id }, (res) => {
+        console.log(res)
         document.getElementById("chat_title").innerHTML = res.sender.name
         document.getElementById("chat_msgs").innerHTML = ""
         res.msgs.forEach(msg => {
@@ -43,27 +45,40 @@ function getMessages(id) {
     })
 }
 
-function newCard() {
-    socket.on("newCard", (data) => {
-        if (data == null) {
-            alert("There are no more persons")
-            res(null)
-        } else {
-            document.getElementById("swipe_name").innerText = data.name
-            document.getElementById("swipe_bio").innerText = data.bio
-        }
+socket.on("newCard", (data) => {
+    // if so students are left
+    if (data == null) {
+        // hide all the card elements and show the sry message
+        document.getElementById("swipe_name").style.display = "none"
+        document.getElementById("swipe_bio").style.display = "none"
+        document.getElementById("swipe_pass").style.display = "none"
+        document.getElementById("swipe_like").style.display = "none"
+        document.getElementById("swipe_null").style.display = "block"
+    } else {
+        // update the card elements
+        document.getElementById("swipe_name").innerText = data.name
+        document.getElementById("swipe_bio").innerText = data.bio
 
-        document.getElementById("swipe_pass").onclick = () => {
-            socket.emit("voteCard", { token: token, action: "pass" })
-            socket.emit("getCard", { token: token })
-        }
+        // hide the sry message and show all the card elements
+        document.getElementById("swipe_name").style.display = "block"
+        document.getElementById("swipe_bio").style.display = "block"
+        document.getElementById("swipe_pass").style.display = "block"
+        document.getElementById("swipe_like").style.display = "block"
+        document.getElementById("swipe_null").style.display = "none"
+    }
 
-        document.getElementById("swipe_like").onclick = () => {
-            socket.emit("voteCard", { token: token, action: "like" })
-            socket.emit("getCard", { token: token })
-        }
-    })
-}
+    //like
+    document.getElementById("swipe_like").onclick = () => {
+        socket.emit("voteCard", { token: token, action: "like" })
+        socket.emit("getCard", { token: token })
+    }
+
+    //pass
+    document.getElementById("swipe_pass").onclick = () => {
+        socket.emit("voteCard", { token: token, action: "pass" })
+        socket.emit("getCard", { token: token })
+    }
+})
 
 let currentChat = null
 function openChat(id) {
@@ -81,40 +96,55 @@ function closeChat() {
 let currentEdit = null
 function openEdit(p) {
     currentEdit = p
-    document.getElementById("edit_title").innerHTML = p.charAt(0).toUpperCase() + p.slice(1)
-    document.getElementById("edit_txt").innerHTML = acc.acc_bio
-    document.getElementById("edit_modal").style.display = "block"
+    switch (currentEdit) {
+        case "bio":
+            document.getElementById("edit_title").innerHTML = p.charAt(0).toUpperCase() + p.slice(1)
+            document.getElementById("edit_txt").value = acc.acc_bio
+            document.getElementById("edit_modal").style.display = "block"
+            break;
+
+        default:
+            break;
+    }
 }
 
 function closeEdit() {
-    socket.emit("editAccount", {
-        token: token,
-        param: currentEdit,
-        value: document.getElementById("edit_txt").value
-    })
-    getAccount()
-    document.getElementById('edit_modal').style.display = "none"
-    acc.acc_bio = document.getElementById("edit_txt").innerHTML
+    switch (currentEdit) {
+        case "bio":
+            acc.acc_bio = document.getElementById("edit_txt").value
+            socket.emit("editAccount", {
+                token: token,
+                param: currentEdit,
+                value: document.getElementById("edit_txt").value
+            })
+            getAccount()
+            document.getElementById('edit_modal').style.display = "none"
+            break;
+
+        default:
+            break;
+    }
     currentEdit = null
 }
+
 
 function newMessage(msg, sender) {
     let newMsg = document.createElement("div")
     newMsg.classList = "w3-container"
 
-    console.log(msg.id)
-
     switch (msg.type) {
         case "text":
+            console.log("new text")
             if (msg.id == sender.id) {
-                newMsg.innerHTML = '<p class="w3-padding w3-theme-l3" style="width:fit-content; border-radius: 20px 20px 20px 00px;">' + msg.text + '</p>'
+                newMsg.innerHTML = '<p class="w3-padding w3-theme-l3" style="width:fit-content; border-radius: 20px 20px 20px 00px;" onClick="alert(this.id)" id="' + msg.id + '">' + msg.text + '</p>'
             } else {
                 // if msg is from you
-                newMsg.innerHTML = '<p class="w3-padding w3-theme-l2 w3-right" style="width:fit-content; border-radius: 20px 20px 00px 20px;">' + msg.text + '</p>'
+                newMsg.innerHTML = '<p class="w3-padding w3-theme-l2 w3-right" style="width:fit-content; border-radius: 20px 20px 00px 20px;" onClick="alert(this.id)" id="' + msg.id + '">' + msg.text + '</p>'
             }
             break;
-        case "":
-
+        case "test":
+            console.log("new test")
+            newMsg.innerHTML = '<div class="w3-container"><p class="w3-block w3-padding w3-theme-l2 w3-center" style="border-radius: 20px 20px 00px 00px;" onClick="alert(this.id)" id="' + msg.id + '">' + msg.text + '</p></div>'
             break;
 
         default:
@@ -123,13 +153,15 @@ function newMessage(msg, sender) {
     document.getElementById("chat_msgs").appendChild(newMsg)
 }
 
-function sendMessage(msg) {
-    socket.emit("sendMessage", { token: token, id: currentChat, txt: msg })
+function sendMessage(cnt) {
+    socket.emit("sendMessage", {
+        token: token,
+        cnt: cnt
+    })
 }
 
 getAccount()
 getMatches()
-newCard()
 
 // update matches
 setInterval(() => {
@@ -140,7 +172,8 @@ setInterval(() => {
 setInterval(() => {
     if (currentChat != null) {
         getMessages(currentChat)
+        // document.getElementById("chat_msgs").scrollTop = document.getElementById("chat_msgs").scrollHeight
     }
-}, 900);
+}, 50);
 
 socket.emit("getCard", { token: token })

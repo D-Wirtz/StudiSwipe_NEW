@@ -9,9 +9,20 @@
         </div>
         <div class="w3-container" id="chat_msgs" style="flex: auto; overflow-y: scroll;">
         </div>
-        <footer class="w3-container w3-teal w3-padding">
-            <input type="text" id="chat_input" class="w3-block"
-                onkeypress="if (event.key == 'Enter') {sendMessage(this.value)}">
+        <div style="display: flex; flex-flow: row;">
+            <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" onclick='sendMessage({type: "test"})'
+                id="btn_acc">Counter</button>
+        </div>
+        <footer class="w3-container w3-theme w3-padding">
+            <input type="text" id="chat_input" class="w3-block w3-input w3-theme-l2" enterkeyhint="send" onkeypress='if (event.key == "Enter") {
+                    sendMessage({
+                        type:"text",
+                        txt: this.value,
+                        to: currentChat
+                    })
+                    document.getElementById("chat_input").value = ""
+                    document.getElementById("chat_input").blur()
+                }'>
         </footer>
     </div>
 </div>
