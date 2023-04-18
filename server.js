@@ -12,6 +12,8 @@ const cookieParser = require('cookie-parser')
 // import my own db class from libs
 const DB = require("./libs/db")
 
+let chats = {}
+
 const accounts = new DB("./data/accounts.json")
 
 app.set('view engine', 'ejs')
@@ -34,8 +36,16 @@ setInterval(() => {
     }
 }, 5 * 1000); // interval speed (5 sec)
 
-app.get("/admin", (req, res) => {
-    res.send(accounts.get({ id: "dan123" }))
+app.get("/db", (req, res) => {
+    res.send(accounts.db)
+})
+
+app.get("/chat", (req, res) => {
+    res.send(chats)
+})
+
+app.get("/sessions", (req, res) => {
+    res.send(sessions)
 })
 
 app.get("/", (req, res) => {
@@ -67,10 +77,13 @@ app.get("*", (req, res) => {
 const newSessionDuration = 60 // in min
 app.post("/login", (req, res) => {
     let accs = accounts.get(req.body)
-    if (accs.length === 1) {
+    if (
+        accs.length === 1
+    ) {
         let session = {
             id: accs[0].id,
-            expiringTime: Date.now() + newSessionDuration * 60 * 1000
+            expiringTime: Date.now() + newSessionDuration * 60 * 1000,
+            updateChat: false
         }
         let token = randomUUID()
         sessions[token] = session
@@ -88,6 +101,10 @@ app.post("/logout", (req, res) => {
 
 io.on("connection", (socket) => {
     let currentProfile = null
+
+    socket.on("disconnect", () => {
+        console.log(currentProfile)
+    })
 
     // account
     socket.on("getAccount", (data, res) => {
@@ -117,10 +134,15 @@ io.on("connection", (socket) => {
                 id: sessions[data.token].id
             })[0]
             let matches = []
-            acc.matches.forEach(m => {
+            // acc.matches.forEach(m => {
+            //     let match = accounts.get({ id: m })[0]
+            //     matches.push({ id: match.id, name: match.name })
+            // });
+
+            for (m in acc.matches) {
                 let match = accounts.get({ id: m })[0]
                 matches.push({ id: match.id, name: match.name })
-            });
+            }
 
             res({
                 acc_matches: matches
@@ -133,51 +155,56 @@ io.on("connection", (socket) => {
         if (sessions.hasOwnProperty(data.token)) {
             acc = accounts.get({
                 id: sessions[data.token].id
-            })[0]
-            if (!acc.msgs.hasOwnProperty(data.id)) {
-                acc.msgs[data.id] = []
+            })[0] // get own account
+            let uuid = acc.matches[data.cnt.id] // get the chat uuid
+            // console.log(chats[uuid])
+
+            // gen new chat if 
+            if (!chats[uuid]) {
+                // chats[uuid] = {
+                //     users: [acc.id, data.cnt.id],
+                //     msgs: {}
+                // }
+                chats[uuid] = {
+                    users: [acc.id, data.cnt.id],
+                    msgs: []
+                }
             }
-            let msgs = acc.msgs[data.id]
-            let sender = {
-                id: data.id,
-                name: accounts.get({ id: data.id })[0].name
-            }
-            res({ msgs: msgs, sender: sender })
+
+            res(
+                { msgs: chats[uuid].msgs }
+            )
         }
     })
 
     socket.on("sendMessage", (data) => {
-        console.log(data)
         if (sessions.hasOwnProperty(data.token)) {
+            acc = accounts.get({
+                id: sessions[data.token].id
+            })[0]
+            let chat_uuid = acc.matches[data.cnt.to]
             let msg = null
             switch (data.cnt.type) {
                 case "text":
                     msg = {
                         type: "text",
-                        id: sessions[data.token].id,
-                        text: data.cnt.txt
+                        text: data.cnt.txt,
+                        author: acc.id,
+                        timestamp: Date.now(),
+                        id: randomUUID()
                     }
-                    break;
-
-                case "test":
-                    msg = {
-                        type: "info",
-                        text: "Test,..."
-                    }
+                    console.log(msg)
                     break;
 
                 default:
                     break;
             }
-            if (!msg) {
-                //sender
-                accounts.db[accounts.db.findIndex((a) => a.id == sessions[data.token].id)].msgs[data.cnt.to].push(msg)
+            if (msg) {
+                chats[chat_uuid].msgs.push(msg)
+                console.log()
+                chats[chat_uuid].users.forEach(u => {
 
-                //partner
-                if (accounts.db[accounts.db.findIndex((a) => a.id == data.cnt.to)].msgs[sessions[data.token].id] == null) {
-                    accounts.db[accounts.db.findIndex((a) => a.id == data.cnt.to)].msgs[sessions[data.token].id] = []
-                }
-                accounts.db[accounts.db.findIndex((a) => a.id == data.cnt.to)].msgs[sessions[data.token].id].push(msg)
+                });
             }
         }
     })
@@ -235,12 +262,21 @@ io.on("connection", (socket) => {
             })[0]
             switch (data.action) {
                 case "like":
-                    accounts.db[accounts.db.findIndex((a) => a.id == acc.id)].liked.push(currentProfile.id)
-                    if (accounts.db[accounts.index(currentProfile)].liked.includes(acc.id)) {
-                        accounts.db[accounts.index(currentProfile)].matches.push(acc.id)
-                        let i = accounts.db.findIndex((a) => a.id == acc.id)
-                        accounts.db[i].matches.push(currentProfile.id)
-                        socket.emit("updateMatches", accounts.db[i].matches)
+                    accounts.db[accounts.db.findIndex((a) => a.id == acc.id)].liked.push(currentProfile.id) // push to own like-list
+
+                    if (accounts.db[accounts.index(currentProfile)].liked.includes(acc.id)) { // if a match
+                        let uuid = randomUUID()
+                        accounts.db[accounts.index(currentProfile)].matches[acc.id] = uuid
+
+                        let i = accounts.db.findIndex((a) => a.id == acc.id) // index of acc
+                        accounts.db[i].matches[currentProfile.id] = uuid
+
+                        chats[uuid] = {
+                            users: [acc.id, currentProfile.id],
+                            msgs: []
+                        }
+
+                        socket.emit("updateMatches", accounts.db[i].matches) // send update to client
                     }
                     currentProfile = null
                     break;

@@ -34,13 +34,12 @@ function getMatches() {
 
 function getMessages(id) {
     // id -> chatPartner
-    socket.emit("getMessages", { token: token, id: id }, (res) => {
+    socket.emit("getMessages", { token: token, cnt: { id: id } }, (res) => {
         console.log(res)
-        document.getElementById("chat_title").innerHTML = res.sender.name
+        document.getElementById("chat_title").innerHTML = id
         document.getElementById("chat_msgs").innerHTML = ""
         res.msgs.forEach(msg => {
-            newMessage(msg, res.sender)
-            // console.log(msg)
+            newMessage(msg, id)
         });
     })
 }
@@ -135,16 +134,16 @@ function newMessage(msg, sender) {
     switch (msg.type) {
         case "text":
             console.log("new text")
-            if (msg.id == sender.id) {
-                newMsg.innerHTML = '<p class="w3-padding w3-theme-l3" style="width:fit-content; border-radius: 20px 20px 20px 00px;" onClick="alert(this.id)" id="' + msg.id + '">' + msg.text + '</p>'
+            if (msg.author == sender) {
+                newMsg.innerHTML = '<p class="w3-padding w3-theme-l3" style="width:fit-content; border-radius: 10px 10px 10px 00px;" id="' + msg.id + '">' + msg.text + '</p>'
             } else {
                 // if msg is from you
-                newMsg.innerHTML = '<p class="w3-padding w3-theme-l2 w3-right" style="width:fit-content; border-radius: 20px 20px 00px 20px;" onClick="alert(this.id)" id="' + msg.id + '">' + msg.text + '</p>'
+                newMsg.innerHTML = '<p class="w3-padding w3-theme-l2 w3-right" style="width:fit-content; border-radius: 10px 10px 00px 10px;" id="' + msg.id + '">' + msg.text + '</p>'
             }
             break;
-        case "test":
+        case "alert":
             console.log("new test")
-            newMsg.innerHTML = '<div class="w3-container"><p class="w3-block w3-padding w3-theme-l2 w3-center" style="border-radius: 20px 20px 00px 00px;" onClick="alert(this.id)" id="' + msg.id + '">' + msg.text + '</p></div>'
+            newMsg.innerHTML = '<div class="w3-container"><p class="w3-block w3-padding w3-theme-l2 w3-center" style="border-radius: 10px 10px 00px 00px;" id="' + msg.id + '">' + msg.text + '</p></div>'
             break;
 
         default:
@@ -174,6 +173,6 @@ setInterval(() => {
         getMessages(currentChat)
         // document.getElementById("chat_msgs").scrollTop = document.getElementById("chat_msgs").scrollHeight
     }
-}, 50);
+}, 500);
 
 socket.emit("getCard", { token: token })
