@@ -36,16 +36,33 @@ setInterval(() => {
     }
 }, 5 * 1000); // interval speed (5 sec)
 
-app.get("/db", (req, res) => {
-    res.send(accounts.db)
+// app.get("/db", (req, res) => {
+//     res.send(accounts.db)
+// })
+
+// app.get("/chat", (req, res) => {
+//     res.send(chats)
+// })
+
+// app.get("/sessions", (req, res) => {
+//     res.send(sessions)
+// })
+
+app.get("/rick", (req, res) => {
+    res.render("rick")
 })
 
-app.get("/chat", (req, res) => {
-    res.send(chats)
+app.get("/admin", (req, res) => {
+    res.render("admin-login")
 })
 
-app.get("/sessions", (req, res) => {
-    res.send(sessions)
+const adminPassword = "regina"
+app.post("/admin", (req, res) => {
+    if (req.body.password == adminPassword) {
+        res.render("admin", {accs: accounts.db})
+    } else {
+        res.redirect(301, "/admin")
+    }
 })
 
 app.get("/", (req, res) => {
@@ -64,9 +81,9 @@ app.get("/login", (req, res) => {
 app.get("/home", (req, res) => {
     let token = req.cookies["session_token"]
     if (!token || !sessions.hasOwnProperty(token)) {
-        res.redirect("/")
+        res.redirect("/login")
     } else {
-        res.render("home")
+        res.render("home", { admin: false, tab: req.query.tab })
     }
 })
 
@@ -101,10 +118,6 @@ app.post("/logout", (req, res) => {
 
 io.on("connection", (socket) => {
     let currentProfile = null
-
-    socket.on("disconnect", () => {
-        console.log(currentProfile)
-    })
 
     // account
     socket.on("getAccount", (data, res) => {
@@ -150,6 +163,19 @@ io.on("connection", (socket) => {
         }
     })
 
+    socket.on("getMatch", (data, res) => {
+        if (sessions.hasOwnProperty(data.token)) {
+            acc = accounts.get({
+                id: sessions[data.token].id
+            })[0]
+            let match = accounts.get({ id: data.cnt.id })[0]
+            res({
+                id: match.id,
+                name: match.name
+            })
+        }
+    })
+
     // matches
     socket.on("getMessages", (data, res) => {
         if (sessions.hasOwnProperty(data.token)) {
@@ -190,10 +216,21 @@ io.on("connection", (socket) => {
                         type: "text",
                         text: data.cnt.txt,
                         author: acc.id,
-                        timestamp: Date.now(),
-                        id: randomUUID()
+                        id: Date.now()
                     }
                     console.log(msg)
+                    break;
+
+                case "game":
+                    msg = {
+                        type: "game_ttt",
+                        board: [
+                            [null, null, null],
+                            [null, null, null],
+                            [null, null, null]
+                        ],
+                        id: Date.now()
+                    }
                     break;
 
                 default:

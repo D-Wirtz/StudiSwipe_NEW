@@ -3,16 +3,47 @@
         <h3>Swipe</h3>
     </div>
     <div style="flex: 2 1; height: 100%; max-height: inherit; overflow-y: scroll;">
-        <div id="swipe_null" class="w3-padding" style="display: none;"><span class="w3-left">Sorry, but it looks like you've already swiped all the students that are right for you</span></div>
+        <div id="swipe_null" class="w3-padding" style="display: none;"><span class="w3-left">Sorry, but it looks like
+                you've already swiped all the students that are right for you</span></div>
         <h2 class="w3-center" id="swipe_name"></h2>
         <div class="w3-container">
             <p class="w3-justify" id="swipe_bio"></p>
         </div>
     </div>
     <div style="flex: 0 1;">
-        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme w3-half" style="width: 50%;"
-            id="swipe_pass">Pass</button>
-        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme w3-half" style="width: 50%;"
-            id="swipe_like">Like</button>
+        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme w3-half" style="width: 50%" id="swipe_pass">Pass</button>
+        <button class="w3-button w3-block w3-theme-l3 w3-hover-theme w3-half" style="width: 50%" id="swipe_like">Like</button>
+
+        <style>
+            button {
+                transition: transform 0.2s ease-in-out;
+            }
+
+            .button-zoom-left {
+                transform: scale(1.5) rotate(-10deg)
+            }
+
+            .button-zoom-right {
+                transform: scale(1.5) rotate(10deg)
+            }
+        </style>
+
+        <script>
+            var likeButton = document.getElementById("swipe_like");
+            likeButton.addEventListener("click", function () {
+                likeButton.classList.add("button-zoom-left");
+                setTimeout(function () {
+                    likeButton.classList.remove("button-zoom-left");
+                }, 200);
+            });
+
+            var passButton = document.getElementById("swipe_pass");
+            passButton.addEventListener("click", function () {
+                passButton.classList.add("button-zoom-right");
+                setTimeout(function () {
+                    passButton.classList.remove("button-zoom-right");
+                }, 200);
+            });
+        </script>
     </div>
 </div>

@@ -5,16 +5,22 @@
                 <span id="chat_title">Title</span>
                 <span onclick="closeChat()" class="w3-right"
                     style="width: 3ex; text-align: center; cursor: pointer;">&#x2716;</span>
+                <!-- <span onclick="openInfo()" class="w3-right"
+                    style="width: 3ex; text-align: center; cursor: pointer;">&#x1F6C8;</span> -->
             </h2>
         </div>
+        <!-- <div class="w3-container">
+            <div class="w3-container">
+                <p class="w3-block w3-padding w3-theme-l2 w3-center" style="border-radius: 10px;" id="' + msg.id + '">' + msg.text + '</p>
+                <canvas height="200" width="200"></canvas>
+            </div>
+        </div> -->
+        <!-- messages -->
         <div class="w3-container" id="chat_msgs" style="flex: auto; overflow-y: scroll;">
         </div>
-        <div style="display: flex; flex-flow: row;">
-            <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" onclick='sendMessage({type: "test"})'
-                id="btn_acc">Counter</button>
-        </div>
+        <!-- text input -->
         <footer class="w3-container w3-theme w3-padding">
-            <input type="text" id="chat_input" class="w3-block w3-input w3-theme-l2" enterkeyhint="send" onkeypress='if (event.key == "Enter") {
+            <input type="text" id="chat_input" class="w3-block w3-input w3-theme-l4" enterkeyhint="send" onkeypress='if (event.key == "Enter") {
                     sendMessage({
                         type:"text",
                         txt: this.value,
@@ -26,3 +32,49 @@
         </footer>
     </div>
 </div>
+
+<script>
+
+    // update messages
+    setInterval(() => {
+        if (currentChat != null) {
+            getMessages(currentChat)
+        }
+    }, 500);
+
+    function newMessage(msg, sender) {
+        let newMsg = document.createElement("div")
+        newMsg.classList = "w3-container"
+
+        switch (msg.type) {
+            case "text":
+                console.log("new text")
+
+                if (msg.author == sender) {
+                    newMsg.innerHTML = '<p class="w3-padding w3-marign-small w3-theme-l3" style="width:fit-content; border-radius: 10px 10px 10px 00px;" id="' + msg.id + '">' + msg.text + '</p>'
+                } else {
+                    // if msg is from you
+                    newMsg.innerHTML = '<p class="w3-padding w3-marign-small w3-theme-l2 w3-right" style="width:fit-content; border-radius: 10px 10px 00px 10px;" id="' + msg.id + '">' + msg.text + '</p>'
+                }
+                break;
+
+            // case "game":
+            //    console.log("new test")
+            //    newMsg.innerHTML = '<div class="w3-container"><p class="w3-block w3-padding w3-theme-l2 w3-center" style="border-radius: 10px 10px 00px 00px;" id="' + msg.id + '">' + msg.text + '</p></div>'
+            //    break;
+
+            default:
+                break;
+        }
+
+        document.getElementById("chat_msgs").appendChild(newMsg)
+        document.getElementById("chat_msgs").scrollTo({ top: document.getElementById("chat_msgs").scrollHeight })
+    }
+
+    function sendMessage(cnt) {
+        socket.emit("sendMessage", {
+            token: token,
+            cnt: cnt
+        })
+    }
+</script>

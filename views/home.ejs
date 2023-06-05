@@ -10,28 +10,38 @@
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
     <script src="/socket.io/socket.io.js"></script>
     <script src="client-code.js"></script>
+    <% if (tab != "account" && tab != "swipe" && tab != "chat") { %>
+        <script>
+            location.search = "?tab=account"
+        </script>
+        <% } %>
 </head>
 
-<body style="display: flex; flex-flow: column; height: 100%; user-select: none;" onload="tab('acc')">
+<body style="display: flex; flex-flow: column; height: 100%; user-select: none;">
     <%- include('components/header') %>
         <div style="display: flex; flex-flow: row; flex: 0 1;">
-            <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('acc')"
-                id="btn_acc">Account</button>
-            <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('swipe')"
-                id="btn_swipe">Swipe</button>
-            <button class="w3-button w3-block w3-theme-l3 w3-hover-theme" style="width: 33.33%;" onclick="tab('chat')"
-                id="btn_chat">Chat</button>
+            <a class="w3-button w3-block w3-theme-l3 <%if(tab=="account"){%>w3-theme<%}%> w3-hover-theme w3-third" href="?tab=account">Account</a>
+            <a class="w3-button w3-block w3-theme-l3 <%if(tab=="swipe"){%>w3-theme<%}%> w3-hover-theme w3-third" href="?tab=swipe">Swipe</a>
+            <a class="w3-button w3-block w3-theme-l3 <%if(tab=="chat"){%>w3-theme<%}%> w3-hover-theme w3-third" href="?tab=chat">Matches</a>
         </div>
         <div class="w3-padding" style="height: inherit; overflow-y: scroll;">
-            <div class="w3-padding-large w3-hide" id="tab_acc" style="height: 100%;">
-                <%- include('components/account') %>
-            </div>
-            <div class="w3-padding-large w3-hide" id="tab_swipe" style="height: 100%;">
-                <%- include('components/swipe') %>
-            </div>
-            <div class="w3-padding-large w3-hide" id="tab_chat" style="height: 100%;">
-                <%- include('components/matches') %>
-            </div>
+            <% if (tab=="account" ) { %>
+                <div class="w3-padding-large" style="height: 100%;">
+                    <%- include('components/account') %>
+                </div>
+            <% } %>
+
+            <% if (tab=="swipe" ) { %>
+                <div class="w3-padding-large" style="height: 100%;">
+                    <%- include('components/swipe') %>
+                </div>
+            <% } %>
+            
+            <% if (tab=="chat" ) { %>
+                <div class="w3-padding-large" style="height: 100%;">
+                    <%- include('components/matches') %>
+                </div>
+            <% } %>
         </div>
         <%- include('components/chat') %>
 </body>

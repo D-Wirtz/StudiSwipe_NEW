@@ -13,7 +13,9 @@ function getAccount() {
     socket.emit("getAccount", { token: token }, (res) => {
         acc = res
         for (let x in res) {
-            document.getElementById(x).innerText = res[x]
+            try {
+                document.getElementById(x).innerText = res[x]
+            } catch (e) { }
         }
     })
 }
@@ -28,19 +30,46 @@ function getMatches() {
                 html = html.concat('<div class="w3-padding"><button class="w3-button w3-block w3-theme-l2 w3-hover-theme" onclick="openChat(\'' + e.id + '\')"><span class="w3-left">' + e.name + '</span></button></div>')
             })
         }
-        document.getElementById("matches").innerHTML = html
+        try {
+            document.getElementById("matches").innerHTML = html
+        } catch (e) { }
+
     })
 }
 
+var currentMsgs = null
 function getMessages(id) {
     // id -> chatPartner
     socket.emit("getMessages", { token: token, cnt: { id: id } }, (res) => {
-        console.log(res)
-        document.getElementById("chat_title").innerHTML = id
-        document.getElementById("chat_msgs").innerHTML = ""
-        res.msgs.forEach(msg => {
-            newMessage(msg, id)
-        });
+        if (!currentMsgs || currentMsgs.length != res.msgs.length) {
+            currentMsgs = res.msgs
+            document.getElementById("chat_msgs").innerHTML = ""
+            res.msgs.forEach(msg => {
+                newMessage(msg, id)
+            });
+        }
+        // if (currentMsgs.length != res.msgs.length) {
+
+        //     // console.log(res.msgs.length - currentMsgs.length)
+        //     // res.msgs.slice(-1).forEach(msg => {
+        //     //     console.log(msg.text)
+        //     //     newMessage(msg, id)
+        //     // });
+        //     currentMsgs = res.msgs
+        //     document.getElementById("chat_msgs").innerHTML = ""
+        //     res.msgs.forEach(msg => {
+        //         newMessage(msg, id)
+        //     });
+        // }
+    })
+}
+
+var currentMatch = null
+function getMatch(id) {
+    socket.emit("getMatch", { token: token, cnt: { id: id } }, (res) => {
+        console.log("getMatch")
+        document.getElementById("chat_title").innerHTML = res.name
+        currentMatch = res
     })
 }
 
@@ -48,48 +77,64 @@ socket.on("newCard", (data) => {
     // if so students are left
     if (data == null) {
         // hide all the card elements and show the sry message
-        document.getElementById("swipe_name").style.display = "none"
-        document.getElementById("swipe_bio").style.display = "none"
-        document.getElementById("swipe_pass").style.display = "none"
-        document.getElementById("swipe_like").style.display = "none"
-        document.getElementById("swipe_null").style.display = "block"
+        try {
+            document.getElementById("swipe_name").style.display = "none"
+            document.getElementById("swipe_bio").style.display = "none"
+            document.getElementById("swipe_pass").style.display = "none"
+            document.getElementById("swipe_like").style.display = "none"
+            document.getElementById("swipe_null").style.display = "block"
+        } catch (e) { }
+
     } else {
         // update the card elements
-        document.getElementById("swipe_name").innerText = data.name
-        document.getElementById("swipe_bio").innerText = data.bio
+        try {
+            document.getElementById("swipe_name").innerText = data.name
+            document.getElementById("swipe_bio").innerText = data.bio
+        } catch (e) { }
 
         // hide the sry message and show all the card elements
-        document.getElementById("swipe_name").style.display = "block"
-        document.getElementById("swipe_bio").style.display = "block"
-        document.getElementById("swipe_pass").style.display = "block"
-        document.getElementById("swipe_like").style.display = "block"
-        document.getElementById("swipe_null").style.display = "none"
+        try {
+            document.getElementById("swipe_name").style.display = "block"
+            document.getElementById("swipe_bio").style.display = "block"
+            document.getElementById("swipe_pass").style.display = "block"
+            document.getElementById("swipe_like").style.display = "block"
+            document.getElementById("swipe_null").style.display = "none"
+        } catch (e) { }
     }
 
     //like
-    document.getElementById("swipe_like").onclick = () => {
-        socket.emit("voteCard", { token: token, action: "like" })
-        socket.emit("getCard", { token: token })
-    }
+    try {
+        document.getElementById("swipe_like").onclick = () => {
+            socket.emit("voteCard", { token: token, action: "like" })
+            socket.emit("getCard", { token: token })
+        }
+    } catch (e) { }
+
 
     //pass
-    document.getElementById("swipe_pass").onclick = () => {
-        socket.emit("voteCard", { token: token, action: "pass" })
-        socket.emit("getCard", { token: token })
-    }
+    try {
+        document.getElementById("swipe_pass").onclick = () => {
+            socket.emit("voteCard", { token: token, action: "pass" })
+            socket.emit("getCard", { token: token })
+        }
+    } catch (e) { }
+
 })
 
 let currentChat = null
 function openChat(id) {
     currentChat = id
     getMessages(currentChat)
+    getMatch(currentChat)
     document.getElementById("chat_modal").style.display = "block"
 }
 
 function closeChat() {
     document.getElementById("chat_msgs").innerHTML = ""
     document.getElementById('chat_modal').style.display = "none"
+    currentMatch = null
     currentChat = null
+    currentMsgs = []
 }
 
 let currentEdit = null
@@ -126,39 +171,6 @@ function closeEdit() {
     currentEdit = null
 }
 
-
-function newMessage(msg, sender) {
-    let newMsg = document.createElement("div")
-    newMsg.classList = "w3-container"
-
-    switch (msg.type) {
-        case "text":
-            console.log("new text")
-            if (msg.author == sender) {
-                newMsg.innerHTML = '<p class="w3-padding w3-theme-l3" style="width:fit-content; border-radius: 10px 10px 10px 00px;" id="' + msg.id + '">' + msg.text + '</p>'
-            } else {
-                // if msg is from you
-                newMsg.innerHTML = '<p class="w3-padding w3-theme-l2 w3-right" style="width:fit-content; border-radius: 10px 10px 00px 10px;" id="' + msg.id + '">' + msg.text + '</p>'
-            }
-            break;
-        case "alert":
-            console.log("new test")
-            newMsg.innerHTML = '<div class="w3-container"><p class="w3-block w3-padding w3-theme-l2 w3-center" style="border-radius: 10px 10px 00px 00px;" id="' + msg.id + '">' + msg.text + '</p></div>'
-            break;
-
-        default:
-            break;
-    }
-    document.getElementById("chat_msgs").appendChild(newMsg)
-}
-
-function sendMessage(cnt) {
-    socket.emit("sendMessage", {
-        token: token,
-        cnt: cnt
-    })
-}
-
 getAccount()
 getMatches()
 
@@ -166,13 +178,5 @@ getMatches()
 setInterval(() => {
     getMatches()
 }, 1000);
-
-// update messages
-setInterval(() => {
-    if (currentChat != null) {
-        getMessages(currentChat)
-        // document.getElementById("chat_msgs").scrollTop = document.getElementById("chat_msgs").scrollHeight
-    }
-}, 500);
 
 socket.emit("getCard", { token: token })

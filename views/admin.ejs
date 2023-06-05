@@ -1,3 +1,54 @@
-<html>
-    
+<!DOCTYPE html>
+<html lang="en" style="height: 100%; max-height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>StudiSwipe</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client-code.js"></script>
+</head>
+
+<body style="display: flex; flex-flow: column; height: 100%; user-select: none;">
+    <%- include('components/header') %>
+    <!-- <img src="https://media.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif" alt=""> -->
+        <div>
+            <div class="w3-half">
+                <h2 class="w3-center">Germany</h2>
+                <div>
+                    <% accs.forEach((a)=> { if (a.located == "de") {%>
+                        <div class="w3-container w3-card w3-margin">
+                            <h4><b><%= a.name %></b> <i>(<span><%= a.id %></span>)</i></h4>
+                            <p><%= a.bio %></p>
+                            <p><b>Password:</b> <i><span><%= a.password %></span><i></p>
+                            <p><b>Liked:</b> <i><span><%= JSON.stringify(a.liked) %></span><i></p>
+                            <p><b>Passed:</b> <i><span><%= JSON.stringify(a.passed) %></span><i></p>
+                            <p><b>Matches:</b> <i><span><%= JSON.stringify(a.matches) %></span><i></p>
+                        </div>
+                    <% }}); %>
+                </div>
+            </div>
+
+            <div class="w3-half">
+                <h2 class="w3-center">UK</h2>
+                <div>
+                    <% accs.forEach((a)=> { if (a.located == "uk") {%>
+                        <div class="w3-container w3-card w3-margin">
+                            <h4><b><%= a.name %></b> <i>(<span><%= a.id %></span>)</i></h4>
+                            <p><%= a.bio %></p>
+                            <p><b>Password:</b> <i><span><%= a.password %></span><i></p>
+                            <p><b>Liked:</b> <i><span><%= JSON.stringify(a.liked) %></span><i></p>
+                            <p><b>Passed:</b> <i><span><%= JSON.stringify(a.passed) %></span><i></p>
+                            <p><b>Matches:</b> <i><span><%= JSON.stringify(a.matches) %></span><i></p>
+                        </div>
+                    <% }}); %>
+                </div>
+            </div>
+        </div>
+</body>
+
+
 </html>
